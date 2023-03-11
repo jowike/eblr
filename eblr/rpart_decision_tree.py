@@ -33,7 +33,9 @@ class RpartDecisionTree():
         nodes = ro.r('rpart.predict.leaves')(tree, rdf, type='where')
         df['nodes'] = nodes
         leaf_where = abs(df.groupby('nodes').agg('mean')['residual']).idxmax()
-        leaf = int(tree.rx2('frame').iloc[leaf_where-1].name)
+        
+        # leaf = int(tree.rx2('frame').iloc[leaf_where-1].name)
+        leaf = int(ro.conversion.rpy2py(tree.rx2('frame')).iloc[leaf_where-1].name)
 
         rules = ro.r('path.rpart')(tree, node=leaf)[0]
 
